@@ -173,7 +173,7 @@ static int lua_range(lua_State *L) {
 				lua_pushnumber(L, lower_bound + rng->bound(upper_bound - lower_bound));
 				return 1;
 			} else {
-				luaL_error(L, "upper_bound must be larger than lower_bound, got from %llu to %llu.", lower_bound, upper_bound);
+				luaL_error(L, "upper_bound must be larger than lower_bound, got from %" PRIu64 " to %" PRIu64 ".", lower_bound, upper_bound);
 			}
 		}
 	}

@@ -612,25 +612,25 @@ public:
 //
 // to print out my_foo_type_t (or its concrete type if it is a synonym)
 
-template <typename T>
-struct printable_typename {};
+// template <typename T>
+// struct printable_typename {};
 
-template <typename T>
-std::ostream& operator<<(std::ostream& out, printable_typename<T>) {
-    const char *implementation_typename = typeid(T).name();
-#ifdef __GNUC__
-    int status;
-    const char* pretty_name =
-        abi::__cxa_demangle(implementation_typename, NULL, NULL, &status);
-    if (status == 0)
-        out << pretty_name;
-    free((void*) pretty_name);
-    if (status == 0)
-        return out;
-#endif
-    out << implementation_typename;
-    return out;
-}
+// template <typename T>
+// std::ostream& operator<<(std::ostream& out, printable_typename<T>) {
+//     const char *implementation_typename = typeid(T).name();
+// #ifdef __GNUC__
+//     int status;
+//     const char* pretty_name =
+//         abi::__cxa_demangle(implementation_typename, NULL, NULL, &status);
+//     if (status == 0)
+//         out << pretty_name;
+//     free((void*) pretty_name);
+//     if (status == 0)
+//         return out;
+// #endif
+//     out << implementation_typename;
+//     return out;
+// }
 
 } // namespace pcg_extras
 
