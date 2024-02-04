@@ -44,7 +44,7 @@ local function init_stream_pressed(self)
 	if pcg then
 		pcgrandom.delete(rng)
 	end
-	rng = pcgrandom.new_rng(pcgrandom.PCG32_K64, 12345, 123)
+	rng = pcgrandom.new_rng(pcgrandom.PCG32_K64, 42, 54)
 	plog({
 		max = pcgrandom.max(rng),
 		period_pow2 = pcgrandom.period_pow2(rng),

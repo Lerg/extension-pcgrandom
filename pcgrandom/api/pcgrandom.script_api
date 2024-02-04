@@ -188,7 +188,7 @@
         type: boolean
         desc: Wrapped.
 
-- name: next_uint64
+  - name: next_uint64
     type: function
     desc: Generates a UINT64 pseudorandom number when used with a 64-bit generator.
 
