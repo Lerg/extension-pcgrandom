@@ -37,7 +37,9 @@ Creates a new specified random number generator with a given seed and an optiona
 ---
 ### pcgrandom.new_rng_array(`pcg_type`: _number_, `array`: _table_, `seed`: _number_, `[stream]`: _number_) -> `rng`: _lightuserdata_
 
-Creates a new specified extended random number generator with a given array for the extended data, seed and an optional stream for generators that support it.
+Creates a new specified extended random number generator with a given array for the extended data, seed and an optional stream.
+
+Supported generators: `pcgrandom.PCG32_K2`, `pcgrandom.PCG32_K64`, `pcgrandom.PCG32_C64`, `pcgrandom.PCG32_K1024`, `pcgrandom.PCG32_C1024`, `pcgrandom.PCG32_K16384`.
 
 - `pcg_type`: _number_ Generator type id.
 - `array`: _table_ Array with UINT32 numbers for the extended data, the size of the array must match the generator type.
