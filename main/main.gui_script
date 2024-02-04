@@ -1,0 +1,170 @@
+-- Logging helpers.
+local pretty_print = require('main.pretty_print')
+local function lines(str)
+	local t = {}
+	local function helper(line) table.insert(t, line) return '' end
+	helper((str:gsub('(.-)\n', helper)))
+	return t
+end
+local logs_lines = {}
+local function log(text)
+	local text_lines = lines(text)
+	for i = 1, #text_lines do
+		table.insert(logs_lines, text_lines[i])
+		if #logs_lines > 62 then
+			table.remove(logs_lines, 1)
+		end
+	end
+end
+local function log_flush()
+	gui.set_text(gui.get_node('logs_label'), table.concat(logs_lines, '\n'))
+end
+local function plog(t)
+	log(pretty_print(t))
+end
+
+-- Button handlers.
+
+local rng
+local function init_pressed(self)
+	log('init_pressed')
+	if pcg then
+		pcgrandom.delete(rng)
+	end
+	rng = pcgrandom.new_rng(pcgrandom.PCG32_K64_ONESEQ, socket.gettime())
+	plog({
+		max = pcgrandom.max(rng),
+		period_pow2 = pcgrandom.period_pow2(rng),
+		streams_pow2 = pcgrandom.streams_pow2(rng)
+	})
+end
+
+local function init_stream_pressed(self)
+	log('init_stream_pressed')
+	if pcg then
+		pcgrandom.delete(rng)
+	end
+	rng = pcgrandom.new_rng(pcgrandom.PCG32_K64, 12345, 123)
+	plog({
+		max = pcgrandom.max(rng),
+		period_pow2 = pcgrandom.period_pow2(rng),
+		streams_pow2 = pcgrandom.streams_pow2(rng)
+	})
+end
+
+local function init_array_pressed(self)
+	log('init_array_pressed')
+	if pcg then
+		pcgrandom.delete(rng)
+	end
+	local array = {}
+	for i = 1, 64 do
+		array[i] = i
+	end
+	rng = pcgrandom.new_rng_array(pcgrandom.PCG32_K64, array, 1)
+	plog({
+		max = pcgrandom.max(rng),
+		period_pow2 = pcgrandom.period_pow2(rng),
+		streams_pow2 = pcgrandom.streams_pow2(rng)
+	})
+end
+
+local function test1_pressed(self)
+	log('test1_pressed')
+	uint64_str = pcgrandom.next_uint64(rng)
+	uint64_hex = ''
+	for i = 1, 8 do
+		uint64_hex = uint64_hex .. string.format('%02X', string.byte(uint64_str, i))
+	end
+	plog({
+		next = pcgrandom.next(rng),
+		bound_100 = pcgrandom.bound(rng, 100),
+		range_5_10 = pcgrandom.range(rng, 5, 10),
+		next_res53 = pcgrandom.next_res53(rng),
+		next_uint64 = uint64_hex,
+		next_real1 = pcgrandom.next_real1(rng),
+		next_real2 = pcgrandom.next_real2(rng),
+		d4 = pcgrandom.d4(rng),
+		d6 = pcgrandom.d6(rng),
+		d8 = pcgrandom.d8(rng),
+		d10 = pcgrandom.d10(rng),
+		d12 = pcgrandom.d12(rng),
+		d20 = pcgrandom.d20(rng),
+		toss = pcgrandom.toss(rng),
+		card = pcgrandom.card(rng),
+		card2 = {pcgrandom.card2(rng)}
+	})
+	local current = pcgrandom.next(rng)
+	pcgrandom.advance(rng, 10)
+	pcgrandom.backstep(rng, 11)
+	log('advance-backstep test: ' .. (current == pcgrandom.next(rng) and 'OK' or 'FAILED'))
+end
+
+local function test2_pressed(self)
+	log('test2_pressed')
+	local array = {}
+	for i = 1, 52 do
+		array[i] = i
+	end
+	pcgrandom.shuffle(rng, array)
+	log(table.concat(array, ',', 1, 26))
+	log(table.concat(array, ',', 27, 52))
+end
+
+local function delete_pressed(self)
+	log('delete_pressed')
+	pcgrandom.delete(rng)
+	rng = nil
+end
+
+-- Show/hide logs view.
+
+local function logs_pressed(self)
+	gui.set_enabled(gui.get_node('logs'), not gui.is_enabled(gui.get_node('logs')))
+end
+
+-- GUI init.
+function init(self)
+	msg.post('.', 'acquire_input_focus')
+	msg.post('@render:', 'clear_color', {color = vmath.vector4(1.0, 1.0, 1.0, 1.0)})
+	gui.set_enabled(gui.get_node('logs'), false)
+end
+
+-- Update logs view.
+local frame = 0
+function update(self, dt)
+	frame = frame + 1
+	if frame == 30 then
+		log_flush()
+		frame = 0
+	end
+end
+
+-- Check if a button is clicked.
+local function button_click(self, action, node_name, callback)
+	if gui.pick_node(gui.get_node(node_name), action.x, action.y) then
+		if action.pressed then
+			gui.set_scale(gui.get_node(node_name), vmath.vector3(1.02, 1.02, 1.02))
+		elseif action.released then
+			gui.set_scale(gui.get_node(node_name), vmath.vector3(1, 1, 1))
+			callback(self)
+		end
+	end
+end
+
+local buttons = {
+	btn_init = init_pressed,
+	btn_init_stream = init_stream_pressed,
+	btn_init_array = init_array_pressed,
+	btn_test1 = test1_pressed,
+	btn_test2 = test2_pressed,
+	btn_delete = delete_pressed,
+	btn_logs = logs_pressed
+}
+function on_input(self, action_id, action)
+	if action_id == hash('touch') then
+		for button, callback in pairs(buttons) do
+			button_click(self, action, button, callback)
+		end
+	end
+end

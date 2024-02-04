@@ -1,0 +1,517 @@
+- name: pcgrandom
+  type: table
+  desc: PCG Random Extension
+
+  members:
+
+  - name: new_rng
+    type: function
+    desc: Creates a new specified random number generator with a given seed and an optional stream for generators that support it.
+
+    parameters:
+      - name: pcg_type
+        type: number
+        desc: PCG type.
+
+      - name: seed
+        type: number
+        desc: Seed number.
+
+      - name: [stream]
+        type: number
+        desc: Stream number.
+
+    return:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+  - name: new_rng_array
+    type: function
+    desc: Creates a new specified extended random number generator with a given array for the extended data, seed and an optional stream for generators that support it.
+
+    parameters:
+      - name: pcg_type
+        type: number
+        desc: PCG type.
+
+      - name: array
+        type: table
+        desc: Array with UINT32 numbers for the extended data, the size of the array must match the generator type.
+
+      - name: seed
+        type: number
+        desc: Seed number.
+
+      - name: [stream]
+        type: number
+        desc: Stream number.
+
+    return:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+  - name: next
+    type: function
+    desc: Generates a pseudorandom integer number.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: value
+        type: number
+        desc: Random value.
+
+  - name: bound
+    type: function
+    desc: Generates a pseudorandom integer number on [0,upper_bound) interval.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+      - name: upper_bound
+        type: number
+        desc: Upper bound.
+
+    return:
+      - name: value
+        type: number
+        desc: Random value.
+
+  - name: range
+    type: function
+    desc: Generates a pseudorandom integer number on [lower_bound,upper_bound) interval.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+      - name: lower_bound
+        type: number
+        desc: Lower bound.
+
+      - name: upper_bound
+        type: number
+        desc: Upper bound.
+
+    return:
+      - name: value
+        type: number
+        desc: Random value.
+
+  - name: advance
+    type: function
+    desc: Advances the generator forward delta steps, but does so in logarithmic time. (Not available for non-equidistributed extended generators.)
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+      - name: delta
+        type: number
+        desc: Delta.
+
+  - name: backstep
+    type: function
+    desc: Moves the generator backwards delta steps, but does so in logarithmic time. (Not available for non-equidistributed extended generators.)
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+      - name: delta
+        type: number
+        desc: Delta.
+
+  - name: max
+    type: function
+    desc: Returns the greatest possible random value from the generator.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: max
+        type: number
+        desc: Max.
+
+  - name: period_pow2
+    type: function
+    desc: Returns the period of the generator as a power of two. For PCG32, it returns 64, indicating a period of 2^64.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: period
+        type: number
+        desc: Period.
+
+  - name: streams_pow2
+    type: function
+    desc: Returns the number of streams as a power of two. For PCG32, it returns 63, indicating 2^63 streams.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: streams
+        type: number
+        desc: Streams.
+
+  - name: wrapped
+    type: function
+    desc: Tells you when the generator wraps around to the beginning (which we define as the zero state).
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: wrapped
+        type: boolean
+        desc: Wrapped.
+
+- name: next_uint64
+    type: function
+    desc: Generates a UINT64 pseudorandom number when used with a 64-bit generator.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: value
+        type: string
+        desc: UINT64 random value represented as an 8 character long string - memory representation of a UINT64 number.
+
+  - name: next_real1
+    type: function
+    desc: Generates a random number on [0,1]-real-interval.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: value
+        type: number
+        desc: Random value.
+
+  - name: next_real2
+    type: function
+    desc: Generates a random number on [0,1)-real-interval.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: value
+        type: number
+        desc: Random value.
+
+  - name: next_res53
+    type: function
+    desc: Generates a random number on [0,1)-real-interval with 53-bit resolution using a 64-bit integer when used with a 64-bit generator.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: value
+        type: number
+        desc: Random value.
+
+  - name: d4
+    type: function
+    desc: Generates a random integer on [1,4] interval like from a dice.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: value
+        type: number
+        desc: Random value.
+
+  - name: d6
+    type: function
+    desc: Generates a random integer on [1,6] interval like from a dice.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: value
+        type: number
+        desc: Random value.
+
+  - name: d8
+    type: function
+    desc: Generates a random integer on [1,8] interval like from a dice.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: value
+        type: number
+        desc: Random value.
+
+  - name: d10
+    type: function
+    desc: Generates a random integer on [1,10] interval like from a dice.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: value
+        type: number
+        desc: Random value.
+
+  - name: d12
+    type: function
+    desc: Generates a random integer on [1,12] interval like from a dice.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: value
+        type: number
+        desc: Random value.
+
+  - name: d20
+    type: function
+    desc: Generates a random integer on [1,20] interval like from a dice.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: value
+        type: number
+        desc: Random value.
+
+  - name: toss
+    type: function
+    desc: Generates a random integer on [0,1] interval like from a toss of a coin.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: value
+        type: number
+        desc: Random value.
+
+  - name: card
+    type: function
+    desc: Generates a random integer on [1,52] interval like picking a random card from a standard deck.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: value
+        type: number
+        desc: Random value.
+
+  - name: card2
+    type: function
+    desc: Generates two random integers on [1,4] and [1,13] intervals like picking a random card suit and a random card from a suit.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+    return:
+      - name: suit
+        type: number
+        desc: Random suit [1,4].
+
+      - name: card
+        type: number
+        desc: Random card [1,13].
+
+  - name: shuffle
+    type: function
+    desc: Shuffles the provided array in place.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+      - name: array
+        type: table
+        desc: The array of values.
+
+  - name: delete
+    type: function
+    desc: Deletes the random generator and frees the alocated memory for it.
+
+    parameters:
+      - name: rng
+        type: lightuserdata
+        desc: RNG instance.
+
+  - name: PCG32
+    type: number
+
+  - name: PCG32_ONESEQ
+    type: number
+
+  - name: PCG32_UNIQUE
+    type: number
+
+  - name: PCG32_FAST
+    type: number
+
+  - name: PCG64
+    type: number
+
+  - name: PCG64_ONESEQ
+    type: number
+
+  - name: PCG64_UNIQUE
+    type: number
+
+  - name: PCG64_FAST
+    type: number
+
+  - name: PCG8_ONCE_INSECURE
+    type: number
+
+  - name: PCG16_ONCE_INSECURE
+    type: number
+
+  - name: PCG32_ONCE_INSECURE
+    type: number
+
+  - name: PCG64_ONCE_INSECURE
+    type: number
+
+  - name: PCG8_ONESEQ_ONCE_INSECURE
+    type: number
+
+  - name: PCG16_ONESEQ_ONCE_INSECURE
+    type: number
+
+  - name: PCG32_ONESEQ_ONCE_INSECURE
+    type: number
+
+  - name: PCG64_ONESEQ_ONCE_INSECURE
+    type: number
+
+  - name: PCG32_K2
+    type: number
+
+  - name: PCG32_K2_FAST
+    type: number
+
+  - name: PCG32_K64
+    type: number
+
+  - name: PCG32_K64_ONESEQ
+    type: number
+
+  - name: PCG32_K64_FAST
+    type: number
+
+  - name: PCG32_C64
+    type: number
+
+  - name: PCG32_C64_ONESEQ
+    type: number
+
+  - name: PCG32_C64_FAST
+    type: number
+
+  - name: PCG32_K1024
+    type: number
+
+  - name: PCG32_K1024_FAST
+    type: number
+
+  - name: PCG32_C1024
+    type: number
+
+  - name: PCG32_C1024_FAST
+    type: number
+
+  - name: PCG32_K16384
+    type: number
+
+  - name: PCG32_K16384_FAST
+    type: number
+
+  - name: PCG64_K32
+    type: number
+
+  - name: PCG64_K32_ONESEQ
+    type: number
+
+  - name: PCG64_K32_FAST
+    type: number
+
+  - name: PCG64_C32
+    type: number
+
+  - name: PCG64_C32_ONESEQ
+    type: number
+
+  - name: PCG64_C32_FAST
+    type: number
+
+  - name: PCG64_K1024
+    type: number
+
+  - name: PCG64_K1024_FAST
+    type: number
+
+  - name: PCG64_C1024
+    type: number
+
+  - name: PCG64_C1024_FAST
+    type: number
