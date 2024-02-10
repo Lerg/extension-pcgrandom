@@ -103,6 +103,7 @@ static int lua_new_rng_array(lua_State *L) {
 					for (int i = 1; i <= array_size; ++i) {
 						lua_rawgeti(L, array_index, i);
 						uint32_t value = get_uint32(L, -1, "array element", &success);
+						lua_pop(L, 1);
 						if (success) {
 							array[i - 1] = value;
 						} else {

@@ -8,3 +8,7 @@ build
 .cproject
 builtins
 .internal
+debug.keystore.pass.txt
+debug.keystore
+manifest.private.der
+manifest.public.der
