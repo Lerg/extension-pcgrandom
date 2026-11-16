@@ -449,9 +449,10 @@ public:
             // For MCGs, the low order two bits never change. In this
             // implementation, we keep them fixed at 3 to make this test
             // easier.
-            return state_ == 3;
+            // itype() so that the emulated 128-bit type (32-bit targets) compiles too
+            return state_ == itype(3U);
         } else {
-            return state_ == 0;
+            return state_ == itype(0U);
         }
     }
 

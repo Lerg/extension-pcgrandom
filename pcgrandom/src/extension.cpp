@@ -17,7 +17,8 @@ static PCGWrapper *get_rng_lightuserda(lua_State *L) {
 static uint32_t get_uint32(lua_State *L, int index, const char *variable_name, bool *success) {
 	if (lua_isnumber(L, index)) {
 		*success = true;
-		return lua_tointeger(L, index);
+		// Through int64_t, as lua_Integer is only 32 bits on 32-bit targets (armv7)
+		return (uint32_t)(int64_t)lua_tonumber(L, index);
 	} else {
 		*success = false;
 		luaL_error(L, "Expected number, got %s. Wrong type for the '%s' variable: '%s'.", luaL_typename(L, index), variable_name, lua_tostring(L, index));
@@ -29,7 +30,7 @@ static uint32_t get_uint32(lua_State *L, int index, const char *variable_name, b
 static uint64_t get_uint64(lua_State *L, int index, const char *variable_name, bool *success) {
 	if (lua_isnumber(L, index)) {
 		*success = true;
-		return lua_tointeger(L, index);
+		return (uint64_t)(int64_t)lua_tonumber(L, index);
 	} else {
 		*success = false;
 		luaL_error(L, "Expected number, got %s. Wrong type for the '%s' variable: '%s'.", luaL_typename(L, index), variable_name, lua_tostring(L, index));
@@ -68,6 +69,11 @@ static int lua_new_rng(lua_State *L) {
 				}
 			} else {
 				rng = new PCGWrapper(pcg_type, seed);
+			}
+			if (rng != nullptr && rng->pcg == nullptr) {
+				// The generator is compiled out on this platform (see pcg_template.h)
+				delete rng;
+				return luaL_error(L, "pcg_type %u is not supported on this platform.", pcg_type_int);
 			}
 			if (rng != nullptr) {
 				lua_pushlightuserdata(L, rng);

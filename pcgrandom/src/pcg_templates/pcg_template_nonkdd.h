@@ -37,9 +37,13 @@ switch (pcg_type) {
 	case PCG32_K1024_FAST:            PCG_CASE(pcg32_k1024_fast)
 	case PCG32_K16384:                PCG_CASE(pcg32_k16384)
 	case PCG32_K16384_FAST:           PCG_CASE(pcg32_k16384_fast)
+// Extended 64-bit generators do not compile with emulated 128-bit math (32-bit targets, e.g. armv7)
+#ifndef PCG_EMULATED_128BIT_MATH
 	case PCG64_K32:                   PCG_CASE(pcg64_k32)
 	case PCG64_K32_ONESEQ:            PCG_CASE(pcg64_k32_oneseq)
 	case PCG64_K32_FAST:              PCG_CASE(pcg64_k32_fast)
 	case PCG64_K1024:                 PCG_CASE(pcg64_k1024)
 	case PCG64_K1024_FAST:            PCG_CASE(pcg64_k1024_fast)
+#endif
+	default: break;
 }

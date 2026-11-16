@@ -11,8 +11,12 @@ switch (pcg_type) {
 	case PCG32_K1024:         PCG_CASE(pcg32_k1024)
 	case PCG32_C1024:         PCG_CASE(pcg32_c1024)
 	case PCG32_K16384:        PCG_CASE(pcg32_k16384)
+// Extended 64-bit generators do not compile with emulated 128-bit math (32-bit targets, e.g. armv7)
+#ifndef PCG_EMULATED_128BIT_MATH
 	case PCG64_K32:           PCG_CASE(pcg64_k32)
 	case PCG64_C32:           PCG_CASE(pcg64_c32)
 	case PCG64_K1024:         PCG_CASE(pcg64_k1024)
 	case PCG64_C1024:         PCG_CASE(pcg64_c1024)
+#endif
+	default: break;
 }
